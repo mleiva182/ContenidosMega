@@ -25,11 +25,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.mleiva.contenidosmega.R
 import com.mleiva.contenidosmega.model.Contenido
 
 /***
@@ -47,7 +49,7 @@ fun ContenidosScreen(viewModel: ContenidosViewModel, onContenidoClick: (Contenid
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Contenidos") },
+                title = { Text(stringResource(id = R.string.title_contenidos)) },
             )
         },
         content = { padding ->
