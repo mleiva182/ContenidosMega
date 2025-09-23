@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "723640525861",
+    "project_id": "contenidosmega-7ce53",
+    "storage_bucket": "contenidosmega-7ce53.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723640525861:android:a49d05718d6a7900994bcc",
+        "android_client_info": {
+          "package_name": "com.mleiva.contenidosmega"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrzvzKhrEzY9jL_-CQUUWLVxxZ5UUQL2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
