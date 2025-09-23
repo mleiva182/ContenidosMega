@@ -2,10 +2,11 @@
 
 ### __ABOUT__
 
-### App to list content from a remote server, in this case with firebase and exoplayer
+### App to list content from a remote server with firebase and exoplayer
 
 * List of content available
 * click in card to load video
+* reload content with SwipeRefresh
 
 ### Json to load content in FireStore Database
 data in file contenidos.json

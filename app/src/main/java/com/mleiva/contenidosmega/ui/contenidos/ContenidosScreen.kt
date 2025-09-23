@@ -28,6 +28,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mleiva.contenidosmega.model.Contenido
 
 /***
@@ -38,7 +40,9 @@ import com.mleiva.contenidosmega.model.Contenido
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContenidosScreen(viewModel: ContenidosViewModel, onContenidoClick: (Contenido) -> Unit) {
-    val lista by viewModel.contenidos.collectAsState()
+
+    val contents by viewModel.contents.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
     Scaffold(
         topBar = {
@@ -47,42 +51,48 @@ fun ContenidosScreen(viewModel: ContenidosViewModel, onContenidoClick: (Contenid
             )
         },
         content = { padding ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                //verticalArrangement = Arrangement.spacedBy(8.dp)
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing),
+                onRefresh = { viewModel.loadContents() },
+                //modifier = Modifier.padding(padding)
             ) {
-                items(lista) { contenido ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clickable { onContenidoClick(contenido) }
-                    ) {
-                        Row(modifier = Modifier.padding(16.dp)) {
-                            AsyncImage(
-                                model = contenido.imagenUrl,
-                                contentDescription = contenido.titulo,
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .clip(RoundedCornerShape(8.dp)),
-                                contentScale = ContentScale.Crop
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    text = contenido.titulo,
-                                    style = MaterialTheme.typography.titleLarge
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    //verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(contents) { contenido ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .clickable { onContenidoClick(contenido) }
+                        ) {
+                            Row(modifier = Modifier.padding(16.dp)) {
+                                AsyncImage(
+                                    model = contenido.imagenUrl,
+                                    contentDescription = contenido.titulo,
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    contentScale = ContentScale.Crop
                                 )
-                                Text(
-                                    text = contenido.descripcion,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    overflow = TextOverflow.Ellipsis
-                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = contenido.titulo,
+                                        style = MaterialTheme.typography.titleLarge
+                                    )
+                                    Text(
+                                        text = contenido.descripcion,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
                             }
                         }
                     }

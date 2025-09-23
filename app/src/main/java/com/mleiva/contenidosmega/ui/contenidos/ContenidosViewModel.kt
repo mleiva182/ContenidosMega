@@ -14,24 +14,39 @@ import kotlinx.coroutines.launch
  * Creted by: Marcelo Leiva on 23-09-2025 at 14:27
  ***/
 class ContenidosViewModel : ViewModel() {
+    private val _contents = MutableStateFlow<List<Contenido>>(emptyList())
+    val contents: StateFlow<List<Contenido>> = _contents
 
-    private val firestore = FirebaseFirestore.getInstance()
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
-    private val _contenidos = MutableStateFlow<List<Contenido>>(emptyList())
-    val contenidos: StateFlow<List<Contenido>> = _contenidos
+    private val db = FirebaseFirestore.getInstance()
 
     init {
-        cargarContenidos()
+        loadContents()
     }
 
-    private fun cargarContenidos() {
-        viewModelScope.launch {
-            firestore.collection("contenidos")
-                .get()
-                .addOnSuccessListener { result ->
-                    val lista = result.documents.mapNotNull { it.toObject(Contenido::class.java) }
-                    _contenidos.value = lista
+    fun loadContents() {
+        _isRefreshing.value = true
+        db.collection("contenidos")
+            .get()
+            .addOnSuccessListener { result ->
+                val list = result.map { doc ->
+                    doc.getString("imagenUrl")?.let {
+                        Contenido(
+                            titulo = doc.getString("titulo") ?: "",
+                            descripcion = doc.getString("descripcion") ?: "",
+                            imagenUrl = it,
+                            videoUrl = doc.getString("videoUrl") ?: ""
+                        )
+                    }
                 }
-        }
+                _contents.value = list as List<Contenido>
+                _isRefreshing.value = false
+            }
+            .addOnFailureListener {
+                _contents.value = emptyList()
+                _isRefreshing.value = false
+            }
     }
 }
